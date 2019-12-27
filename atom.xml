@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-12-26T09:55:58.650Z</updated>
+  <updated>2019-12-27T02:04:59.676Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>V8引擎垃圾内存回收原理解析</title>
+    <link href="http://yoursite.com/2019/12/27/V8%E5%BC%95%E6%93%8E%E5%9E%83%E5%9C%BE%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/"/>
+    <id>http://yoursite.com/2019/12/27/V8%E5%BC%95%E6%93%8E%E5%9E%83%E5%9C%BE%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/</id>
+    <published>2019-12-27T01:53:43.558Z</published>
+    <updated>2019-12-27T02:04:59.676Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;V8-引擎垃圾内存回收原理解析&quot;&gt;&lt;a href=&quot;#V8-引擎垃圾内存回收原理解析&quot; class=&quot;headerlink&quot; title=&quot;V8 引擎垃圾内存回收原理解析&quot;&gt;&lt;/a&gt;V8 引擎垃圾内存回收原理解析&lt;/h1&gt;&lt;p&gt;JS 语言不像 C/C++,
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>Vue相关问题(一)</title>
