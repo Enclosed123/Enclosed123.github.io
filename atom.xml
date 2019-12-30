@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-12-29T01:47:32.419Z</updated>
+  <updated>2019-12-30T02:11:19.288Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>构建大型Vue-js项目的10条建议</title>
+    <link href="http://yoursite.com/2019/12/30/%E6%9E%84%E5%BB%BA%E5%A4%A7%E5%9E%8BVue-js%E9%A1%B9%E7%9B%AE%E7%9A%8410%E6%9D%A1%E5%BB%BA%E8%AE%AE/"/>
+    <id>http://yoursite.com/2019/12/30/%E6%9E%84%E5%BB%BA%E5%A4%A7%E5%9E%8BVue-js%E9%A1%B9%E7%9B%AE%E7%9A%8410%E6%9D%A1%E5%BB%BA%E8%AE%AE/</id>
+    <published>2019-12-30T02:09:20.605Z</published>
+    <updated>2019-12-30T02:11:19.288Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;构建大型-Vue-js-项目的10条建议&quot;&gt;&lt;a href=&quot;#构建大型-Vue-js-项目的10条建议&quot; class=&quot;headerlink&quot; title=&quot;构建大型 Vue.js 项目的10条建议&quot;&gt;&lt;/a&gt;构建大型 Vue.js
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>前端性能优化(一)</title>
