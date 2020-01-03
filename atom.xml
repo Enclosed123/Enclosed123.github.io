@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-12-30T02:11:19.288Z</updated>
+  <updated>2020-01-03T09:13:16.165Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>webpack最佳配置指北</title>
+    <link href="http://yoursite.com/2020/01/03/webpack%E6%9C%80%E4%BD%B3%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8C%97/"/>
+    <id>http://yoursite.com/2020/01/03/webpack%E6%9C%80%E4%BD%B3%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8C%97/</id>
+    <published>2020-01-03T09:12:02.278Z</published>
+    <updated>2020-01-03T09:13:16.165Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;webpack-最佳配置指北&quot;&gt;&lt;a href=&quot;#webpack-最佳配置指北&quot; class=&quot;headerlink&quot; title=&quot;webpack 最佳配置指北&quot;&gt;&lt;/a&gt;webpack 最佳配置指北&lt;/h1&gt;&lt;h3 id=&quot;前言&quot;&gt;&lt;a
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>构建大型Vue-js项目的10条建议</title>
