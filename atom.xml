@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-01-03T09:13:16.165Z</updated>
+  <updated>2020-01-04T04:10:10.316Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>git常用指令</title>
+    <link href="http://yoursite.com/2020/01/04/git%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/"/>
+    <id>http://yoursite.com/2020/01/04/git%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/</id>
+    <published>2020-01-04T04:08:26.597Z</published>
+    <updated>2020-01-04T04:10:10.316Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;关于git你日常工作中会用到的一些东西&quot;&gt;&lt;a href=&quot;#关于git你日常工作中会用到的一些东西&quot; class=&quot;headerlink&quot; title=&quot;关于git你日常工作中会用到的一些东西&quot;&gt;&lt;/a&gt;关于git你日常工作中会用到的一些东西&lt;/h1&gt;&lt;h2
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>webpack最佳配置指北</title>
