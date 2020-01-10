@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>手写call-apply-bind | Baohan.Blog | 交流与分享</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="">
+    <meta name="description" content="都2020年了，你应该知道如何手写Call、Apply、Bind了吧导读作为面试中面试官最宠爱的一个问题，在这里进行一个详细的介绍，大家重点要放在理解，而不是背。 写的不好或不对的地方，请大家积极指出，好了，话不多说，我们“圆规正转” 1234567先说一下三者的区别共同点就是修改this指向，不同点就是1.call()和apply()是立刻执行的， 而bind()是返回了一个函数2.call则可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="手写call-apply-bind">
+<meta property="og:url" content="http://yoursite.com/2020/01/10/%E6%89%8B%E5%86%99call-apply-bind/index.html">
+<meta property="og:site_name" content="Baohan.Blog | 交流与分享">
+<meta property="og:description" content="都2020年了，你应该知道如何手写Call、Apply、Bind了吧导读作为面试中面试官最宠爱的一个问题，在这里进行一个详细的介绍，大家重点要放在理解，而不是背。 写的不好或不对的地方，请大家积极指出，好了，话不多说，我们“圆规正转” 1234567先说一下三者的区别共同点就是修改this指向，不同点就是1.call()和apply()是立刻执行的， 而bind()是返回了一个函数2.call则可">
+<meta property="og:locale" content="cn">
+<meta property="article:published_time" content="2020-01-10T13:01:52.279Z">
+<meta property="article:modified_time" content="2020-01-10T13:02:59.860Z">
+<meta property="article:author" content="包寒">
+<meta property="article:tag" content="个人博客">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="学习">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Baohan.Blog | 交流与分享" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/home_128px_1237716_easyicon.net.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/006Zw1yCly1fxmsomzdvoj30u016de83.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">包寒</h5>
+          <a href="mailto:373751805@qq.com" title="373751805@qq.com" class="mail">373751805@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Enclosed123" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5d7e6fd56fb9a06ae61ae7e6" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">手写call-apply-bind</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">手写call-apply-bind</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-01-10T13:01:52.279Z" itemprop="datePublished" class="page-time">
+  2020-01-10
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#都2020年了，你应该知道如何手写Call、Apply、Bind了吧"><span class="post-toc-number">1.</span> <span class="post-toc-text">都2020年了，你应该知道如何手写Call、Apply、Bind了吧</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#导读"><span class="post-toc-number">1.0.0.1.</span> <span class="post-toc-text">导读</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一、手写实现Call"><span class="post-toc-number">1.0.1.</span> <span class="post-toc-text">一、手写实现Call</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-call主要都做了些什么。"><span class="post-toc-number">1.0.1.1.</span> <span class="post-toc-text">1.call主要都做了些什么。</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-简单实现"><span class="post-toc-number">1.0.1.2.</span> <span class="post-toc-text">2.简单实现</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#3-出现的问题"><span class="post-toc-number">1.0.1.3.</span> <span class="post-toc-text">3.出现的问题</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#4-统统解决"><span class="post-toc-number">1.0.1.4.</span> <span class="post-toc-text">4.统统解决</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#二、手动实现Apply"><span class="post-toc-number">1.0.2.</span> <span class="post-toc-text">二、手动实现Apply</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#实现了call其实也就间接实现了apply，只不过就是传递的参数不同"><span class="post-toc-number">1.0.2.1.</span> <span class="post-toc-text">实现了call其实也就间接实现了apply，只不过就是传递的参数不同</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#三、实现Bind"><span class="post-toc-number">1.0.3.</span> <span class="post-toc-text">三、实现Bind</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-bind特性"><span class="post-toc-number">1.0.3.1.</span> <span class="post-toc-text">1.bind特性</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-简单实现-1"><span class="post-toc-number">1.0.3.2.</span> <span class="post-toc-text">2.简单实现</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#3-优化"><span class="post-toc-number">1.0.3.3.</span> <span class="post-toc-text">3.优化</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#3-1-调用bind是个啥玩意？"><span class="post-toc-number">1.0.3.4.</span> <span class="post-toc-text">3.1 调用bind是个啥玩意？</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#3-2-传递参数"><span class="post-toc-number">1.0.3.5.</span> <span class="post-toc-text">3.2 传递参数</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#3-3this丢失"><span class="post-toc-number">1.0.3.6.</span> <span class="post-toc-text">3.3this丢失</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#3-4绑定原型"><span class="post-toc-number">1.0.3.7.</span> <span class="post-toc-text">3.4绑定原型</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#转载自掘金"><span class="post-toc-number">1.0.4.</span> <span class="post-toc-text">转载自掘金</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-手写call-apply-bind"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">手写call-apply-bind</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-01-10 21:01:52" datetime="2020-01-10T13:01:52.279Z"  itemprop="datePublished">2020-01-10</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="都2020年了，你应该知道如何手写Call、Apply、Bind了吧"><a href="#都2020年了，你应该知道如何手写Call、Apply、Bind了吧" class="headerlink" title="都2020年了，你应该知道如何手写Call、Apply、Bind了吧"></a>都2020年了，你应该知道如何手写Call、Apply、Bind了吧</h1><h4 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h4><p>作为面试中面试官最宠爱的一个问题，在这里进行一个详细的介绍，大家重点要放在理解，而不是背。 写的不好或不对的地方，请大家积极指出，好了，话不多说，我们“圆规正转”</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">先说一下三者的区别</span><br><span class="line">共同点就是修改this指向，不同点就是</span><br><span class="line">1.call()和apply()是立刻执行的， 而bind()是返回了一个函数</span><br><span class="line">2.call则可以传递多个参数，第一个参数和apply一样，是用来替换的对象，后边是参数列表。</span><br><span class="line">3.apply最多只能有两个参数——新this对象和一个数组argArray</span><br><span class="line"></span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+
+<h3 id="一、手写实现Call"><a href="#一、手写实现Call" class="headerlink" title="一、手写实现Call"></a>一、手写实现Call</h3><h4 id="1-call主要都做了些什么。"><a href="#1-call主要都做了些什么。" class="headerlink" title="1.call主要都做了些什么。"></a>1.call主要都做了些什么。</h4><ul>
+<li>更改this指向</li>
+<li>函数立刻执行</li>
+</ul>
+<h4 id="2-简单实现"><a href="#2-简单实现" class="headerlink" title="2.简单实现"></a>2.简单实现</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Function.prototype.myCall &#x3D; function(context) &#123;</span><br><span class="line">  context.fn &#x3D; this;</span><br><span class="line">  context.fn();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const obj &#x3D; &#123;</span><br><span class="line">  value: &#39;hdove&#39;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function fn() &#123;</span><br><span class="line">  console.log(this.value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn.myCall(obj); &#x2F;&#x2F; hdove</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-出现的问题"><a href="#3-出现的问题" class="headerlink" title="3.出现的问题"></a>3.出现的问题</h4><ul>
+<li>无法传值</li>
+<li>如果fn()有返回值的话，myCall 之后获取不到</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">function fn() &#123;</span><br><span class="line">  return this.value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">console.log(fn.myCall(obj)); &#x2F;&#x2F; undefined</span><br><span class="line"></span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>call其实就是更改this指向，指向一个Object，如果用户传的是基本类型又或者干脆就不传呢？</li>
+<li>myCall执行之后，obj会一直绑着fn()</li>
+</ul>
+<h4 id="4-统统解决"><a href="#4-统统解决" class="headerlink" title="4.统统解决"></a>4.统统解决</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">Function.prototype.myCall &#x3D; function(context) &#123;</span><br><span class="line">  &#x2F;&#x2F; 1.判断有没有传入要绑定的对象，没有默认是window，如果是基本类型的话通过Object()方法进行转换（解决问题3）</span><br><span class="line">  var context &#x3D; Object(context) || window;</span><br><span class="line">  </span><br><span class="line">  &#x2F;**</span><br><span class="line">    在指向的对象obj上新建一个fn属性，值为this，也就是fn()</span><br><span class="line">    相当于obj变成了</span><br><span class="line">    &#123;</span><br><span class="line">        value: &#39;hdove&#39;,</span><br><span class="line">        fn: function fn() &#123;</span><br><span class="line">          console.log(this.value);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  *&#x2F;</span><br><span class="line">  context.fn &#x3D; this;</span><br><span class="line">  </span><br><span class="line">  &#x2F;&#x2F; 2.保存返回值</span><br><span class="line">  let result &#x3D; &#39;&#39;;</span><br><span class="line">  </span><br><span class="line">  &#x2F;&#x2F; 3.取出传递的参数 第一个参数是this， 下面是三种截取除第一个参数之外剩余参数的方法（解决问题1）</span><br><span class="line">  const args &#x3D; [...arguments].slice(1);</span><br><span class="line">  &#x2F;&#x2F;const args &#x3D; Array.prototype.slice.call(arguments, 1);</span><br><span class="line">  &#x2F;&#x2F;const args &#x3D; Array.from(arguments).slice(1);</span><br><span class="line">  </span><br><span class="line">  &#x2F;&#x2F; 4.执行这个方法，并传入参数 ...是es6的语法用来展开数组</span><br><span class="line">  result &#x3D; context.fn(...args);</span><br><span class="line">  </span><br><span class="line">  &#x2F;&#x2F;5.删除该属性（解决问题4）</span><br><span class="line">  delete context.fn;</span><br><span class="line">  </span><br><span class="line">  &#x2F;&#x2F;6.返回 （解决问题2）</span><br><span class="line">  return result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">const obj &#x3D; &#123;</span><br><span class="line">  value: &#39;hdove&#39;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function fn(name, age) &#123;</span><br><span class="line">  return  &#123;</span><br><span class="line">      value: this.value,</span><br><span class="line">      name,</span><br><span class="line">      age</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn.myCall(obj, &#39;LJ&#39;, 25); &#x2F;&#x2F; &#123;value: &quot;hdove&quot;, name: &quot;LJ&quot;, age: 25&#125;</span><br><span class="line"></span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="二、手动实现Apply"><a href="#二、手动实现Apply" class="headerlink" title="二、手动实现Apply"></a>二、手动实现Apply</h3><h4 id="实现了call其实也就间接实现了apply，只不过就是传递的参数不同"><a href="#实现了call其实也就间接实现了apply，只不过就是传递的参数不同" class="headerlink" title="实现了call其实也就间接实现了apply，只不过就是传递的参数不同"></a>实现了call其实也就间接实现了apply，只不过就是传递的参数不同</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">Function.prototype.myApply &#x3D; function(context, args) &#123;</span><br><span class="line">  var context &#x3D; Object(context) || window;</span><br><span class="line">  </span><br><span class="line">  context.fn &#x3D; this;</span><br><span class="line">  </span><br><span class="line">  let result &#x3D; &#39;&#39;;</span><br><span class="line">  </span><br><span class="line">  &#x2F;&#x2F;4. 判断有没有传入args</span><br><span class="line">  if(!args) &#123;</span><br><span class="line">    result &#x3D; context.fn();</span><br><span class="line">  &#125;else &#123;</span><br><span class="line">    result &#x3D; context.fn(...args);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  delete context.fn;</span><br><span class="line">  </span><br><span class="line">  return result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">const obj &#x3D; &#123;</span><br><span class="line">  value: &#39;hdove&#39;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function fn(name, age) &#123;</span><br><span class="line">  return  &#123;</span><br><span class="line">      value: this.value,</span><br><span class="line">      name,</span><br><span class="line">      age</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn.myApply(obj, [&#39;LJ&#39;, 25]); &#x2F;&#x2F; &#123;value: &quot;hdove&quot;, name: &quot;LJ&quot;, age: 25&#125;</span><br><span class="line"></span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="三、实现Bind"><a href="#三、实现Bind" class="headerlink" title="三、实现Bind"></a>三、实现Bind</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bind() 方法创建一个新的函数，在 bind() 被调用时，这个新函数的 this 被指定为 bind() 的第一个参数，而其余参数将作为新函数的参数，供调用时使用(MDN)</span><br><span class="line"></span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-bind特性"><a href="#1-bind特性" class="headerlink" title="1.bind特性"></a>1.bind特性</h4><ul>
+<li>指定this</li>
+<li>返回一个函数</li>
+<li>传递参数并柯里化</li>
+</ul>
+<h4 id="2-简单实现-1"><a href="#2-简单实现-1" class="headerlink" title="2.简单实现"></a>2.简单实现</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">Function.prototype.myBind &#x3D; function(context) &#123;</span><br><span class="line">    const self &#x3D; this;</span><br><span class="line">    </span><br><span class="line">    return function() &#123;</span><br><span class="line">        self.apply(context);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const obj &#x3D; &#123;</span><br><span class="line">  value: &#39;hdove&#39;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function fn() &#123;</span><br><span class="line">    console.log(this.value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var bindFn &#x3D; fn.myBind(obj);</span><br><span class="line"></span><br><span class="line">bindFn(); &#x2F;&#x2F; &#39;hdove;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-优化"><a href="#3-优化" class="headerlink" title="3.优化"></a>3.优化</h4><p>相比于call、apply，我个人觉得bind的实现逻辑更加复杂，需要考虑的东西很多，在这里分开进行优化。</p>
+<h4 id="3-1-调用bind是个啥玩意？"><a href="#3-1-调用bind是个啥玩意？" class="headerlink" title="3.1 调用bind是个啥玩意？"></a>3.1 调用bind是个啥玩意？</h4><p>在这里我们需要进行一下判断，判断调用<code>bind</code>的是不是一个函数，不是的话就要抛出错误。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Function.prototype.myBind &#x3D; function(context) &#123;</span><br><span class="line"></span><br><span class="line">    if (typeof this !&#x3D;&#x3D; &quot;function&quot;) &#123;</span><br><span class="line">        throw new Error(&quot;不是一个函数&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    const self &#x3D; this;</span><br><span class="line">    </span><br><span class="line">    return function() &#123;</span><br><span class="line">        self.apply(context);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2-传递参数"><a href="#3-2-传递参数" class="headerlink" title="3.2 传递参数"></a>3.2 传递参数</h4><p>我们看下面这段代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">Function.prototype.myBind &#x3D; function(context) &#123;</span><br><span class="line"></span><br><span class="line">    if (typeof this !&#x3D;&#x3D; &quot;function&quot;) &#123;</span><br><span class="line">        throw new Error(&quot;不是一个函数&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    const self &#x3D; this;</span><br><span class="line">    </span><br><span class="line">    return function() &#123;</span><br><span class="line">        self.apply(context);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const obj &#x3D; &#123;</span><br><span class="line">  value: &#39;hdove&#39;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function fn(name, age) &#123;</span><br><span class="line">    console.log(this.value);</span><br><span class="line">    console.log(name);</span><br><span class="line">    console.log(age);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var bindFn &#x3D; fn.myBind(obj, LJ, 25);</span><br><span class="line"></span><br><span class="line">bindFn(); &#x2F;&#x2F; &#39;hdove&#39; undefined undefined</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+
+<p>很明显，第一个优化的地方就是传递参数，我们来改造下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">Function.prototype.myBind &#x3D; function(context) &#123;</span><br><span class="line"></span><br><span class="line">    if (typeof this !&#x3D;&#x3D; &quot;function&quot;) &#123;</span><br><span class="line">        throw new Error(&quot;不是一个函数&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    const self &#x3D; this;</span><br><span class="line">    </span><br><span class="line">    &#x2F;&#x2F; 第一个参数是this，截取掉</span><br><span class="line">    const args &#x3D; [...arguments].slice(1);</span><br><span class="line">    </span><br><span class="line">    return function() &#123;</span><br><span class="line">        &#x2F;**</span><br><span class="line">            这里我们其实即可以使用apply又可以使用call来更改this的指向</span><br><span class="line">            使用apply的目的其实就是因为args是一个数组，更符合apply的条件</span><br><span class="line">        *&#x2F;</span><br><span class="line">        return self.apply(context, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const obj &#x3D; &#123;</span><br><span class="line">  value: &#39;hdove&#39;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function fn(name, age) &#123;</span><br><span class="line">    console.log(this.value);</span><br><span class="line">    console.log(name);</span><br><span class="line">    console.log(age);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var bindFn &#x3D; fn.myBind(obj, &#39;LJ&#39;, 25);</span><br><span class="line"></span><br><span class="line">bindFn(); &#x2F;&#x2F; &#39;hdove&#39; &#39;LJ&#39; 25</span><br><span class="line"> </span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+
+<p>想在看起来没什么问题，但是我们这样传一下参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var bindFn &#x3D; fn.myBind(obj, &#39;LJ&#39;);</span><br><span class="line"></span><br><span class="line">bindFn(25); &#x2F;&#x2F; &#39;hdove&#39; &#39;LJ&#39; undefined</span><br><span class="line"></span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+
+<p>我们发现后面传递的参数丢了，这里就需要使用柯里化来解决这个问题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">Function.prototype.myBind &#x3D; function(context) &#123;</span><br><span class="line"></span><br><span class="line">    if (typeof this !&#x3D;&#x3D; &quot;function&quot;) &#123;</span><br><span class="line">        throw new Error(&quot;不是一个函数&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    const self &#x3D; this;</span><br><span class="line">    </span><br><span class="line">    &#x2F;&#x2F; 第一个参数是this，截取掉</span><br><span class="line">    const args1 &#x3D; [...arguments].slice(1);</span><br><span class="line">    </span><br><span class="line">    return function() &#123;</span><br><span class="line">        &#x2F;&#x2F; 获取调用时传入的参数</span><br><span class="line">        const args2 &#x3D; [...arguments];</span><br><span class="line">        return self.apply(context, args1.concat(args2));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const obj &#x3D; &#123;</span><br><span class="line">  value: &#39;hdove&#39;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function fn(name, age) &#123;</span><br><span class="line">    console.log(this.value);</span><br><span class="line">    console.log(name);</span><br><span class="line">    console.log(age);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var bindFn &#x3D; fn.myBind(obj, &#39;LJ&#39;);</span><br><span class="line"></span><br><span class="line">bindFn(25); &#x2F;&#x2F; &#39;hdove&#39; &#39;LJ&#39; 25</span><br><span class="line"></span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-3this丢失"><a href="#3-3this丢失" class="headerlink" title="3.3this丢失"></a>3.3this丢失</h4><p>其实<code>bind</code>还具有一个特性就是 <code>作为构造函数使用的绑定函数</code>,意思就是这个绑定函数可以当成构造函数使用，可以调用<code>new</code>操作符去创建一个实例，当我们使用<code>new</code>操作符之后，<code>this</code>其实不是指向我们指定的对象，而是指向<code>new</code>出来的这个实例的构造函数，不过提供的参数列表仍然会插入到构造函数调用时的参数列表之前。我们简单实现一下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">Function.prototype.myBind &#x3D; function(context) &#123;</span><br><span class="line">    if (typeof this !&#x3D;&#x3D; &quot;function&quot;) &#123;</span><br><span class="line">        throw new Error(&quot;不是一个函数&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    const self &#x3D; this;</span><br><span class="line">    const args1 &#x3D; [...arguments].slice(1);</span><br><span class="line">    </span><br><span class="line">    const bindFn &#x3D; function() &#123;</span><br><span class="line">        const args2 &#x3D; [...arguments];</span><br><span class="line">        </span><br><span class="line">        &#x2F;**</span><br><span class="line">            这里我们通过打印this，我们可以看出来。</span><br><span class="line">            当这个绑定函数被当做普通函数调用的时候，this其实是指向window。</span><br><span class="line">            而当做构造函数使用的时候，却是指向这个实例，所以this instanceof bindFn为true，这个实例可以获取到fn()里面的值。</span><br><span class="line">            </span><br><span class="line">            我们可以再fn里面添加一个属性test.</span><br><span class="line">            如果按照之前的写法 打印出来的是undefined，正好验证了我们上面所说的this指向的问题。</span><br><span class="line">            所以解决方法就是添加验证，判断当前this</span><br><span class="line">            如果 this instanceof bindFn 说明这是new出来的实例，指向这个实例， 否则指向context</span><br><span class="line">        *&#x2F;</span><br><span class="line">        console.log(this);</span><br><span class="line">        </span><br><span class="line">        return self.apply(this instanceof bindFn ? this : context, args1.concat(args2));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return bindFn;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const obj &#x3D; &#123;</span><br><span class="line">  value: &#39;hdove&#39;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function fn(name, age) &#123;</span><br><span class="line">    this.test &#x3D; &#39;我是测试数据&#39;;</span><br><span class="line">    console.log(this.value);</span><br><span class="line">    console.log(name);</span><br><span class="line">    console.log(age);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var bindFn &#x3D; fn.myBind(obj, &#39;LJ&#39;);</span><br><span class="line"></span><br><span class="line">var newBind &#x3D; new bindFn(25);</span><br><span class="line"></span><br><span class="line">console.log(newBind.test); &#x2F;&#x2F; undefined</span><br><span class="line"></span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-4绑定原型"><a href="#3-4绑定原型" class="headerlink" title="3.4绑定原型"></a>3.4绑定原型</h4><p>我们都知道每一个构造函数，都会有一个原型对象(prototype),来添加额外的属性。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">function fn(name, age) &#123;</span><br><span class="line">    this.test &#x3D; &#39;我是测试数据&#39;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn.prototype.pro &#x3D; &#39;原型数据&#39;;</span><br><span class="line"></span><br><span class="line">var bindFn &#x3D; fn.myBind(obj, &#39;LJ&#39;, 25);</span><br><span class="line"></span><br><span class="line">var newBind &#x3D; new bindFn();</span><br><span class="line"></span><br><span class="line">console.log(bindObj.pro); &#x2F;&#x2F; undefined</span><br><span class="line"></span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+
+<p>因为我们没有绑定原型，所以会出现<code>undefined</code>，我们简单绑定一下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">Function.prototype.myBind &#x3D; function(context) &#123;</span><br><span class="line">    if (typeof this !&#x3D;&#x3D; &quot;function&quot;) &#123;</span><br><span class="line">        throw new Error(&quot;不是一个函数&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    const self &#x3D; this;</span><br><span class="line">    const args1 &#x3D; [...arguments].slice(1);</span><br><span class="line">    </span><br><span class="line">    const bindFn &#x3D; function() &#123;</span><br><span class="line">        const args2 &#x3D; [...arguments];</span><br><span class="line">        return self.apply(this instanceof bindFn ? this : context, args1.concat(args2));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    &#x2F;&#x2F; 绑定原型</span><br><span class="line">    bindFn.prototype &#x3D; self.prototype;</span><br><span class="line">    </span><br><span class="line">    return bindFn;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function fn(name, age) &#123;</span><br><span class="line">    this.test &#x3D; &#39;我是测试数据&#39;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn.prototype.pro &#x3D; &#39;原型数据&#39;;</span><br><span class="line"></span><br><span class="line">var bindFn &#x3D; fn.myBind(obj, &#39;LJ&#39;, 25);</span><br><span class="line"></span><br><span class="line">var newBind &#x3D; new bindFn();</span><br><span class="line"></span><br><span class="line">console.log(bindObj.pro); &#x2F;&#x2F; &quot;原型数据&quot;</span><br><span class="line"></span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+
+<p>但是这样会出现这样一个问题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">function fn(name, age) &#123;</span><br><span class="line">    this.test &#x3D; &#39;我是测试数据&#39;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn.prototype.pro &#x3D; &#39;原型数据&#39;;</span><br><span class="line"></span><br><span class="line">var bindFn &#x3D; fn.myBind(obj, &#39;LJ&#39;);</span><br><span class="line"></span><br><span class="line">var bindObj &#x3D; new bindFn();</span><br><span class="line"></span><br><span class="line">bindObj.__proto__.pro &#x3D; &#39;篡改原型数据&#39;;</span><br><span class="line"></span><br><span class="line">console.log(bindObj.__proto__ &#x3D;&#x3D;&#x3D; fn.prototype); &#x2F;&#x2F; true</span><br><span class="line"></span><br><span class="line">console.log(bindObj.pro); &#x2F;&#x2F; &quot;篡改原型数据&quot;</span><br><span class="line"></span><br><span class="line">console.log(fn.prototype.pro); &#x2F;&#x2F; &quot;篡改原型数据&quot;</span><br><span class="line"></span><br><span class="line">当我们修改bindObj的原型的时候，fn的原型也一起修改了</span><br><span class="line">这其实是因为 bindObj.__proto__ &#x3D;&#x3D;&#x3D; fn.prototype</span><br><span class="line">我们在修改bindObj的同时也间接修改了fn</span><br><span class="line"></span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+
+<p>解决方法其实很简单，创建一个新方法<code>proFn()</code>，来进行原型绑定，也就是实现继承的几种方式中的原型式继承，然后我们把这个新方法的实例对象绑定到我们的绑定函数的原型中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">Function.prototype.myBind &#x3D; function(context) &#123;</span><br><span class="line">    if (typeof this !&#x3D;&#x3D; &quot;function&quot;) &#123;</span><br><span class="line">        throw new Error(&quot;不是一个函数&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    const self &#x3D; this;</span><br><span class="line">    const args1 &#x3D; [...arguments].slice(1);</span><br><span class="line">    </span><br><span class="line">    const bindFn &#x3D; function() &#123;</span><br><span class="line">      const args2 &#x3D; [...arguments];</span><br><span class="line">       </span><br><span class="line">        return self.apply(this instanceof bindFn ? this : context, args1.concat(args2));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    &#x2F;&#x2F; 绑定原型</span><br><span class="line">    </span><br><span class="line">    function proFn() &#123;&#125;  &#x2F;&#x2F;创建新方法</span><br><span class="line">    proFn.prototype &#x3D; self.prototype; &#x2F;&#x2F;继承原型</span><br><span class="line">    bindFn.prototype &#x3D; new proFn(); &#x2F;&#x2F;绑定原型</span><br><span class="line">    </span><br><span class="line">    return bindFn;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function fn(name, age) &#123;</span><br><span class="line">    this.test &#x3D; &#39;我是测试数据&#39;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn.prototype.pro &#x3D; &#39;原型数据&#39;;</span><br><span class="line"></span><br><span class="line">var bindFn &#x3D; fn.myBind(obj, &#39;LJ&#39;, 25);</span><br><span class="line"></span><br><span class="line">var newBind &#x3D; new bindFn();</span><br><span class="line"></span><br><span class="line">console.log(bindObj.__proto__ &#x3D;&#x3D;&#x3D; fn.prototype); &#x2F;&#x2F; false</span><br><span class="line"></span><br><span class="line">console.log(bindObj.pro); &#x2F;&#x2F; &quot;篡改原型数据&quot;</span><br><span class="line"></span><br><span class="line">console.log(fn.prototype.pro); &#x2F;&#x2F; &quot;原型数据&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="转载自掘金"><a href="#转载自掘金" class="headerlink" title="转载自掘金"></a>转载自掘金</h3><p><strong>Hdove</strong></p>
+<p><a href="https://juejin.im/post/5e17f16f5188254d3f73c7df#heading-16" target="_blank" rel="noopener">https://juejin.im/post/5e17f16f5188254d3f73c7df#heading-16</a></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2020-01-10T13:02:59.860Z" itemprop="dateUpdated">2020-01-10 21:02:59</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/006Zw1yCly1fxmsomzdvoj30u016de83.jpg" alt="包寒">
+            包寒
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2020/01/10/%E6%89%8B%E5%86%99call-apply-bind/&title=《手写call-apply-bind》 — Baohan.Blog | 交流与分享&pic=http://yoursite.com/img/006Zw1yCly1fxmsomzdvoj30u016de83.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2020/01/10/%E6%89%8B%E5%86%99call-apply-bind/&title=《手写call-apply-bind》 — Baohan.Blog | 交流与分享&source=个人博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2020/01/10/%E6%89%8B%E5%86%99call-apply-bind/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《手写call-apply-bind》 — Baohan.Blog | 交流与分享&url=http://yoursite.com/2020/01/10/%E6%89%8B%E5%86%99call-apply-bind/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2020/01/10/%E6%89%8B%E5%86%99call-apply-bind/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/01/06/webpack%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">webpack性能优化</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>This blog is licensed under a <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>包寒 &copy; 2015 - 2020</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2020/01/10/%E6%89%8B%E5%86%99call-apply-bind/&title=《手写call-apply-bind》 — Baohan.Blog | 交流与分享&pic=http://yoursite.com/img/006Zw1yCly1fxmsomzdvoj30u016de83.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2020/01/10/%E6%89%8B%E5%86%99call-apply-bind/&title=《手写call-apply-bind》 — Baohan.Blog | 交流与分享&source=个人博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2020/01/10/%E6%89%8B%E5%86%99call-apply-bind/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《手写call-apply-bind》 — Baohan.Blog | 交流与分享&url=http://yoursite.com/2020/01/10/%E6%89%8B%E5%86%99call-apply-bind/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2020/01/10/%E6%89%8B%E5%86%99call-apply-bind/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACrklEQVR42u3a0W4iMQwF0P7/T+++rkSBe+2kZaUzTxUdGJ8gJcb211d8/fnnenz98Z7H69nntJ/8dePCw8PDW4T+Oqz9e5/d8wyWLMqbz8TDw8O7xnv9mGT7fv3eZFHy5ciXBg8PD+8TeJvg2vQaDw8P73/nJQdGW0TISwx4eHh4n8bLN/Fkm87vaRPxi7UWPDw8vJi32ZR/6+8r/T08PDy8dVf9VNEhH0dIku8iTjw8PLwLvFnRoS09bFLhPIany4SHh4d3lNeWWdv21b4g2/73m+8NDw8P7yhv055vN/dN2t2+goeHh/fzvNdB1Dl7nCjnZYui4IuHh4d3jbcJazY4tWEXC4qHh4d3lLcfrkpCb5thm5bbm1oLHh4e3pq3GWyajRrMQs+LEXh4eHg/w3v9tlUhYF1umMX55jvEw8PDW/DOktqUN1+UvJR88RvDw8PDi0ux+yVoN/1j4wh4eHh4F3inhq429+TjCLOn4OHh4d3g3WhNzUYBWkaeoOPh4eGd5W0S2aQp1e7Sm+Mn+t2Ah4eHd4g3K6G2x8Bs1CBPwY8NDeDh4eGVDbD2SDjVKktGCgokHh4e3gVeS8rT6LY9ti9qFCk1Hh4e3oK3ecC+VDEbQRgOXeHh4eFd4L0OYjZk0PL2Q1d4eHh4t3l5s2pzz2yLLwD3QsfDw8MrW/VtmyoPpQ00X9xvihF4eHh4R3mnChB5KHmjq12IN78b8PDw8A7xNodBskBt0XY27PV0OfDw8PAu8NqkNk+X86Lw7BBKist4eHh493ht0WFWos0Pj7wSWxQj8PDw8C7w8o04Dz1PzXNwUWXBw8PD+wDePvGddflnYDw8PLxP4CXstiw7S7KLmgoeHh7eNd6sGNGOEWwaV8MmHB4eHt4FXnt4zFLwU8hjJDw8PLxJVH8BEf8r8KzVUo4AAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
